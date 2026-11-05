@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Francisco Bueno | Aerospace Engineering & Robotics</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        gray: {
+                            50: '#f9fafb',
+                            100: '#f3f4f6',
+                            200: '#e5e7eb',
+                            300: '#d1d5db',
+                            400: '#9ca3af',
+                            500: '#6b7280',
+                            600: '#4b5563',
+                            700: '#374151',
+                            800: '#1f2937',
+                            900: '#111827',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Phosphor Icons for elegant scalable icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* Custom base styles for ultra-clean aesthetic */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        ::selection {
+            background-color: #e5e7eb; /* gray-200 */
+            color: #111827; /* gray-900 */
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 font-sans selection:bg-gray-200 selection:text-black">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-100 transition-all">
+        <div class="max-w-6xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="#" class="text-xl font-bold tracking-tight text-gray-900 hover:text-gray-600 transition-colors">
+                    Francisco Bueno
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#projects" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Projects</a>
+                    <a href="#news" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Publications</a>
+                    <a href="Francisco Bueno.pdf" target="_blank" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">CV</a>
+                    <a href="#contact" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Contact</a>
+                </div>
+                <!-- Mobile menu button (Simplified for visual, functionality requires JS) -->
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-500 hover:text-gray-900 focus:outline-none">
+                        <i class="ph ph-list text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <main class="max-w-6xl mx-auto px-6 lg:px-8 pt-20">
+
+        <!-- Hero Section -->
+        <section class="py-24 md:py-40 max-w-4xl">
+            <h1 class="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 leading-tight">
+                Francisco Bueno
+            </h1>
+            <h2 class="mt-4 text-xl md:text-2xl font-medium text-gray-500">
+                M.S. Aerospace Engineering Candidate <span class="hidden md:inline">|</span><br class="md:hidden"> UAS Robotics Researcher
+            </h2>
+            <p class="mt-8 text-lg text-gray-600 leading-relaxed max-w-2xl font-light">
+                I design, build, and test autonomous aerial systems. My research at the <strong>AirCRAFT Lab</strong> bridges mechanical design, flight dynamics, and computer vision, utilizing 6D pose algorithms and RRT* path planning to advance UAS state estimation in complex environments.
+            </p>
+            <div class="mt-10 flex flex-col sm:flex-row gap-4">
+                <a href="#projects" class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 transition-colors shadow-sm">
+                    View Projects
+                </a>
+                <a href="Francisco Bueno.pdf" target="_blank" class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors shadow-sm">
+                    <i class="ph ph-download-simple mr-2 text-lg"></i> Download Resume
+                </a>
+            </div>
+        </section>
+
+        <!-- Featured Projects Section -->
+        <section id="projects" class="py-20 border-t border-gray-100">
+            <div class="flex items-center justify-between mb-12">
+                <h3 class="text-3xl font-bold tracking-tight text-gray-900">Featured Work</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                
+                <!-- Project 1 -->
+                <div class="group cursor-pointer flex flex-col h-full">
+                    <div class="overflow-hidden rounded-xl bg-gray-100 aspect-[4/3] mb-6 relative border border-gray-200">
+                        <!-- Placeholder Image Box -->
+                        <img src="https://placehold.co/800x600/f3f4f6/9ca3af?text=Project+VECTOR" alt="Project VECTOR thumbnail" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">Vision-Based 6D Pose Estimation</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed font-light flex-grow">
+                        (Project VECTOR). Developed a pipeline utilizing Meta's Segment Anything Model 2 and Lucas-Kanade Optical Flow to extract position, attitude, and angular rates from video feeds.
+                    </p>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="group cursor-pointer flex flex-col h-full">
+                    <div class="overflow-hidden rounded-xl bg-gray-100 aspect-[4/3] mb-6 relative border border-gray-200">
+                         <!-- Placeholder Image Box -->
+                         <img src="https://placehold.co/800x600/f3f4f6/9ca3af?text=Fixed-Wing+UAS" alt="Fixed-Wing UAS thumbnail" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">Group II Fixed-Wing UAS</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed font-light flex-grow">
+                        Engineered and flight-tested a 25-lb autonomous fixed-wing aircraft. Designed 450+ parts in SolidWorks, manufactured using composites, and integrated Pixhawk for autonomous waypoint navigation.
+                    </p>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="group cursor-pointer flex flex-col h-full">
+                    <div class="overflow-hidden rounded-xl bg-gray-100 aspect-[4/3] mb-6 relative border border-gray-200">
+                         <!-- Placeholder Image Box -->
+                         <img src="https://placehold.co/800x600/f3f4f6/9ca3af?text=Thrust+Stand" alt="Thrust Stand thumbnail" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">Configurable Thrust Stand</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed font-light flex-grow">
+                        Developed a custom C++/Arduino load-cell testing apparatus for electric RC motors, achieving total data uncertainty under 3% for accurate propulsion modeling.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- News & Recognition Section -->
+        <section id="news" class="py-20 border-t border-gray-100">
+            <h3 class="text-3xl font-bold tracking-tight text-gray-900 mb-10">Latest News & Recognition</h3>
+            <div class="max-w-3xl space-y-8">
+                
+                <!-- News Item 1 -->
+                <div class="flex group">
+                    <div class="mr-6 mt-1 flex-shrink-0">
+                        <div class="w-3 h-3 rounded-full border-2 border-gray-900 group-hover:bg-gray-900 transition-colors"></div>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-400 block mb-1">2026</span>
+                        <h4 class="text-lg font-medium text-gray-900">Conference Presentation</h4>
+                        <p class="mt-2 text-gray-600 font-light">Authored and presented "Estimating Full Multicopter Dynamics and Flight States from Video Feed" at the <strong>AIAA AVIATION 2026</strong> conference.</p>
+                    </div>
+                </div>
+
+                <!-- News Item 2 -->
+                <div class="flex group">
+                    <div class="mr-6 mt-1 flex-shrink-0">
+                        <div class="w-3 h-3 rounded-full border-2 border-gray-900 group-hover:bg-gray-900 transition-colors"></div>
+                    </div>
+                    <div>
+                        <span class="text-sm font-medium text-gray-400 block mb-1">2026</span>
+                        <h4 class="text-lg font-medium text-gray-900">Symposium Award</h4>
+                        <p class="mt-2 text-gray-600 font-light">Awarded <strong>2nd Place</strong> at the Graduate Research Symposium at Saint Louis University.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer / Contact Section -->
+    <footer id="contact" class="bg-gray-50 border-t border-gray-200 mt-12 py-16">
+        <div class="max-w-6xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row justify-between items-start md:items-center">
+            
+            <div class="mb-8 md:mb-0">
+                <h3 class="text-2xl font-bold tracking-tight text-gray-900 mb-2">Let's connect.</h3>
+                <p class="text-gray-500 font-light">Currently open to new opportunities and research collaborations.</p>
+            </div>
+
+            <div class="flex flex-col space-y-4">
+                <a href="mailto:francisco.buenorojas@slu.edu" class="flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+                    <i class="ph ph-envelope-simple text-xl mr-3"></i>
+                    <span class="font-medium">francisco.buenorojas@slu.edu</span>
+                </a>
+                <a href="https://github.com/CiscoBueno" target="_blank" class="flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+                    <i class="ph ph-github-logo text-xl mr-3"></i>
+                    <span class="font-medium">github.com/CiscoBueno</span>
+                </a>
+                <a href="tel:3149157881" class="flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+                    <i class="ph ph-phone text-xl mr-3"></i>
+                    <span class="font-medium">(314) 915-7881</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="max-w-6xl mx-auto px-6 lg:px-8 mt-16 pt-8 border-t border-gray-200 text-sm text-gray-400 font-light flex flex-col md:flex-row justify-between items-center">
+            <p>&copy; 2026 Francisco Bueno. All rights reserved.</p>
+            <p class="mt-2 md:mt-0">Aerospace Engineering & Robotics</p>
+        </div>
+    </footer>
+
+</body>
+</html>
