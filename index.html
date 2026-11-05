@@ -67,8 +67,10 @@
     <section id="projects" class="max-w-5xl mx-auto px-6 py-16">
         <h2 class="text-2xl font-bold mb-10 border-b pb-4">Featured Work</h2>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Project 1 -->
+        <!-- Changed to md:grid-cols-2 for a 2x2 layout -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Row 1, Project 1 -->
             <div class="group cursor-pointer">
                 <div class="aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden shadow-sm flex items-center justify-center">
                     <span class="text-gray-500 font-medium text-sm">Image Pending</span>
@@ -77,7 +79,16 @@
                 <p class="text-sm text-gray-600 leading-relaxed">Developed a vision-based pipeline utilizing Meta's Segment Anything Model 2 and Lucas-Kanade Optical Flow to extract position, attitude, and angular rates from video feeds. Verified against onboard Pixhawk GNSS/INS telemetry.</p>
             </div>
 
-            <!-- Project 2 -->
+            <!-- Row 1, Project 2 (New Project Placeholder) -->
+            <div class="group cursor-pointer">
+                <div class="aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden shadow-sm flex items-center justify-center">
+                    <span class="text-gray-500 font-medium text-sm">Image Pending</span>
+                </div>
+                <h3 class="font-bold text-lg mb-2 group-hover:text-blue-600 transition-colors">New Project Title</h3>
+                <p class="text-sm text-gray-600 leading-relaxed">Project description placeholder. Replace this text with the details of your new project once you are ready.</p>
+            </div>
+
+            <!-- Row 2, Project 1 -->
             <div class="group cursor-pointer">
                 <div class="aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden shadow-sm">
                     <img src="assets/Plane1.png" alt="7-ft Fixed-Wing UAS" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
@@ -86,7 +97,7 @@
                 <p class="text-sm text-gray-600 leading-relaxed">Engineered and flight-tested a 25-lb autonomous fixed-wing aircraft. Designed 450+ parts in SolidWorks, manufactured using composite materials, and integrated Pixhawk systems for autonomous waypoint navigation.</p>
             </div>
 
-            <!-- Project 3 -->
+            <!-- Row 2, Project 2 -->
             <div class="group cursor-pointer">
                 <div class="aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden shadow-sm">
                     <img src="assets/Thrust1.png" alt="Configurable Thrust Stand" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
@@ -94,6 +105,7 @@
                 <h3 class="font-bold text-lg mb-2 group-hover:text-blue-600 transition-colors">Configurable Propulsion Thrust Stand</h3>
                 <p class="text-sm text-gray-600 leading-relaxed">Developed a custom C++/Arduino load-cell testing apparatus for electric RC motors, diagnosing inefficiencies in testing methods and achieving total data uncertainty under 3%.</p>
             </div>
+            
         </div>
     </section>
 
