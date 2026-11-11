@@ -19,6 +19,7 @@
             <a href="#projects" class="hover:text-blue-600 transition-colors">Projects</a>
             <a href="#presentations" class="hover:text-blue-600 transition-colors">News</a>
             <a href="#contact" class="hover:text-blue-600 transition-colors">Contact</a>
+            <a href="#simulator" class="hover:text-blue-600 transition-colors">Simulator</a>
         </div>
     </nav>
 
@@ -147,6 +148,463 @@
             
         </div>
     </section>
+
+    <!-- Interactive 3D Attitude Simulator Section -->
+    <section id="simulator" class="max-w-5xl mx-auto px-6 py-16">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b pb-4 gap-2">
+            <div>
+                <span class="text-xs font-bold tracking-widest text-[#2c5344] uppercase">Interactive Kinematics Sandbox</span>
+                <h2 class="text-2xl font-bold mt-1">3D Quadcopter Attitude & Frame Visualizer</h2>
+            </div>
+            <p class="text-xs text-gray-500">Z-Y-X Euler Sequence (Eq. 1) &bull; Body Rates (Eq. 18)</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Column: Attitude Controls & Live Math Readout -->
+            <div class="lg:col-span-5 bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
+                <div>
+                    <h3 class="font-bold text-base text-gray-900 mb-1">Command Attitude (Euler Angles)</h3>
+                    <p class="text-xs text-gray-500">Enter target angles or drag sliders to rotate the quadcopter about its body frame axes.</p>
+                </div>
+
+                <!-- Roll (Phi) -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between items-center text-sm">
+                        <label for="roll-input" class="font-semibold text-gray-800 flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block"></span>
+                            Roll (&phi;) &mdash; X<sub>b</sub> Axis
+                        </label>
+                        <div class="flex items-center gap-1">
+                            <input id="roll-input" type="number" min="-85" max="85" step="1" value="0" 
+                                class="w-16 px-2 py-1 text-right text-sm font-mono border border-gray-300 rounded focus:outline-none focus:border-blue-600">
+                            <span class="text-xs text-gray-500 font-mono">deg</span>
+                        </div>
+                    </div>
+                    <input id="roll-slider" type="range" min="-85" max="85" step="1" value="0" class="w-full accent-blue-600 cursor-pointer">
+                </div>
+
+                <!-- Pitch (Theta) -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between items-center text-sm">
+                        <label for="pitch-input" class="font-semibold text-gray-800 flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span>
+                            Pitch (&theta;) &mdash; Y<sub>b</sub> Axis
+                        </label>
+                        <div class="flex items-center gap-1">
+                            <input id="pitch-input" type="number" min="-85" max="85" step="1" value="0" 
+                                class="w-16 px-2 py-1 text-right text-sm font-mono border border-gray-300 rounded focus:outline-none focus:border-blue-600">
+                            <span class="text-xs text-gray-500 font-mono">deg</span>
+                        </div>
+                    </div>
+                    <input id="pitch-slider" type="range" min="-85" max="85" step="1" value="0" class="w-full accent-red-500 cursor-pointer">
+                </div>
+
+                <!-- Yaw (Psi) -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between items-center text-sm">
+                        <label for="yaw-input" class="font-semibold text-gray-800 flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                            Yaw (&psi;) &mdash; Z<sub>b</sub> Axis
+                        </label>
+                        <div class="flex items-center gap-1">
+                            <input id="yaw-input" type="number" min="-180" max="180" step="1" value="0" 
+                                class="w-16 px-2 py-1 text-right text-sm font-mono border border-gray-300 rounded focus:outline-none focus:border-blue-600">
+                            <span class="text-xs text-gray-500 font-mono">deg</span>
+                        </div>
+                    </div>
+                    <input id="yaw-slider" type="range" min="-180" max="180" step="1" value="0" class="w-full accent-emerald-500 cursor-pointer">
+                </div>
+
+                <!-- Quick Presets -->
+                <div class="flex flex-wrap gap-2 pt-1">
+                    <button id="btn-reset-hover" type="button" class="px-3 py-1.5 text-xs font-semibold bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors">
+                        Reset to Hover (0&deg;, 0&deg;, 0&deg;)
+                    </button>
+                    <button id="btn-preset-bank" type="button" class="px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 rounded-md hover:bg-gray-200 transition-colors">
+                        Aggressive Bank (35&deg;, -20&deg;, 45&deg;)
+                    </button>
+                </div>
+
+                <!-- Live Math Telemetry (Equations 1 & 18) -->
+                <div class="pt-4 border-t border-gray-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Rotation Matrix R<sub>I</sub><sup>B</sup> (Eq. 1)</span>
+                        <span class="text-[11px] font-mono text-gray-400">Body &rarr; Inertial</span>
+                    </div>
+                    <div id="matrix-readout" class="grid grid-cols-3 gap-1.5 bg-gray-50 p-3 rounded-lg border border-gray-200 font-mono text-xs text-center text-gray-800">
+                        <div>1.000</div><div>0.000</div><div>0.000</div>
+                        <div>0.000</div><div>1.000</div><div>0.000</div>
+                        <div>0.000</div><div>0.000</div><div>1.000</div>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-1">
+                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Body Rates [p, q, r]<sup>T</sup> (Eq. 18)</span>
+                        <span class="text-[11px] font-mono text-gray-400">rad/s</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 font-mono text-xs text-center">
+                        <div class="bg-gray-50 py-1.5 px-2 rounded border border-gray-200">
+                            <span class="text-gray-400 mr-1">p:</span><span id="rate-p" class="font-semibold text-gray-800">0.00</span>
+                        </div>
+                        <div class="bg-gray-50 py-1.5 px-2 rounded border border-gray-200">
+                            <span class="text-gray-400 mr-1">q:</span><span id="rate-q" class="font-semibold text-gray-800">0.00</span>
+                        </div>
+                        <div class="bg-gray-50 py-1.5 px-2 rounded border border-gray-200">
+                            <span class="text-gray-400 mr-1">r:</span><span id="rate-r" class="font-semibold text-gray-800">0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: 3D WebGL Viewport -->
+            <div class="lg:col-span-7 relative">
+                <div id="drone-canvas-container" class="w-full h-[460px] bg-slate-900 rounded-xl overflow-hidden shadow-md border border-slate-800 cursor-grab active:cursor-grabbing relative">
+                    <!-- Overlay Legend -->
+                    <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-sm border border-slate-700/80 rounded-lg px-3 py-2 text-[11px] text-slate-200 space-y-1 pointer-events-none select-none">
+                        <div class="font-semibold text-white mb-1">Body Frame Axes (R<sub>B</sub>)</div>
+                        <div class="flex items-center gap-2"><span class="w-2.5 h-0.5 bg-blue-400 inline-block"></span> +X<sub>b</sub> : Nose / Roll Axis (&phi;)</div>
+                        <div class="flex items-center gap-2"><span class="w-2.5 h-0.5 bg-red-400 inline-block"></span> +Y<sub>b</sub> : Lateral / Pitch Axis (&theta;)</div>
+                        <div class="flex items-center gap-2"><span class="w-2.5 h-0.5 bg-emerald-400 inline-block"></span> +Z<sub>b</sub> : Vertical / Yaw Axis (&psi;)</div>
+                    </div>
+                    <div class="absolute bottom-3 right-4 text-[11px] text-slate-400 pointer-events-none select-none">
+                        Drag to orbit camera &bull; Scroll to zoom
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Three.js Library & Self-Contained Attitude Simulator Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+    (function() {
+        const container = document.getElementById('drone-canvas-container');
+        if (!container || typeof THREE === 'undefined') return;
+
+        // 1. Scene, Camera (Z-Up to match aeronautical frame), and Renderer
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0f172a);
+
+        const camera = new THREE.PerspectiveCamera(42, container.clientWidth / container.clientHeight, 0.1, 100);
+        camera.up.set(0, 0, 1);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+        scene.add(ambientLight);
+
+        const sunLight = new THREE.DirectionalLight(0xfff7ed, 1.1);
+        sunLight.position.set(5, -4, 6);
+        scene.add(sunLight);
+
+        const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.5);
+        rimLight.position.set(-5, 5, -3);
+        scene.add(rimLight);
+
+        // 2. Inertial Reference Frame Grid & Axes (R_I)
+        const gridHelper = new THREE.GridHelper(6, 12, 0x334155, 0x1e293b);
+        gridHelper.rotation.x = Math.PI / 2;
+        gridHelper.position.z = -0.9;
+        scene.add(gridHelper);
+
+        const inertialOrigin = new THREE.Vector3(0, 0, -0.89);
+        scene.add(new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), inertialOrigin, 1.2, 0x3b82f6, 0.12, 0.06));
+        scene.add(new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), inertialOrigin, 1.2, 0xef4444, 0.12, 0.06));
+        scene.add(new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), inertialOrigin, 0.8, 0x10b981, 0.12, 0.06));
+
+        // 3. Procedural 3D FPV Quadcopter Group (Body Frame R_B: +X Front, +Y Left, +Z Up)
+        const droneGroup = new THREE.Group();
+        droneGroup.matrixAutoUpdate = false;
+        scene.add(droneGroup);
+
+        // Materials matching reference photo
+        const carbonMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.45, metalness: 0.35 });
+        const darkCarbonMat = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.35, metalness: 0.5 });
+        const redAccentMat = new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.3, metalness: 0.4 });
+        const copperMotorMat = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.25, metalness: 0.8 });
+        const batteryMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.5, metalness: 0.2 });
+        const propMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, transparent: true, opacity: 0.45, side: THREE.DoubleSide });
+
+        // Bottom & Top Carbon Plates
+        const bottomPlate = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.42, 0.04), carbonMat);
+        bottomPlate.position.set(0, 0, -0.08);
+        droneGroup.add(bottomPlate);
+
+        const topPlate = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.36, 0.035), carbonMat);
+        topPlate.position.set(-0.04, 0, 0.12);
+        droneGroup.add(topPlate);
+
+        // Central Rectangular Battery Mass (per Figure b in paper)
+        const batteryMesh = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.26, 0.15), batteryMat);
+        batteryMesh.position.set(-0.04, 0, 0.01);
+        droneGroup.add(batteryMesh);
+
+        // Red Anodized Standoffs (8 pillars connecting plates)
+        const standoffGeo = new THREE.CylinderGeometry(0.016, 0.016, 0.20, 12);
+        standoffGeo.rotateX(Math.PI / 2);
+        [[-0.42, 0.15], [-0.42, -0.15], [0.0, 0.15], [0.0, -0.15], [0.35, 0.14], [0.35, -0.14]].forEach(([sx, sy]) => {
+            const standoff = new THREE.Mesh(standoffGeo, redAccentMat);
+            standoff.position.set(sx, sy, 0.02);
+            droneGroup.add(standoff);
+        });
+
+        // Front FPV Camera & Lens (+X_b Nose)
+        const camBody = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.22, 0.20), darkCarbonMat);
+        camBody.position.set(0.52, 0, 0.02);
+        droneGroup.add(camBody);
+
+        const lensGeo = new THREE.CylinderGeometry(0.075, 0.075, 0.08, 24);
+        lensGeo.rotateZ(Math.PI / 2);
+        const camLens = new THREE.Mesh(lensGeo, new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.1, metalness: 0.9 }));
+        camLens.position.set(0.61, 0, 0.02);
+        droneGroup.add(camLens);
+
+        // Top GPS Puck & Mast
+        const mastGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.26, 10);
+        mastGeo.rotateX(Math.PI / 2);
+        const gpsMast = new THREE.Mesh(mastGeo, darkCarbonMat);
+        gpsMast.position.set(0.08, 0, 0.25);
+        gpsMast.rotation.y = -0.22;
+        droneGroup.add(gpsMast);
+
+        const puckGeo = new THREE.CylinderGeometry(0.11, 0.11, 0.035, 24);
+        puckGeo.rotateX(Math.PI / 2);
+        const gpsPuck = new THREE.Mesh(puckGeo, darkCarbonMat);
+        gpsPuck.position.set(0.11, 0, 0.38);
+        droneGroup.add(gpsPuck);
+
+        const puckStripe = new THREE.Mesh(new THREE.CylinderGeometry(0.112, 0.112, 0.01, 24).rotateX(Math.PI / 2), redAccentMat);
+        puckStripe.position.set(0.11, 0, 0.38);
+        droneGroup.add(puckStripe);
+
+        // Rear VTX Antennas (Red/Orange Left, Green Right as in reference photo)
+        const antGeo = new THREE.CylinderGeometry(0.01, 0.01, 0.30, 8);
+        antGeo.rotateX(Math.PI / 2);
+        const leftAnt = new THREE.Mesh(antGeo, new THREE.MeshStandardMaterial({ color: 0xf97316 }));
+        leftAnt.position.set(-0.42, 0.09, 0.25);
+        leftAnt.rotation.y = 0.35;
+        leftAnt.rotation.x = -0.2;
+        droneGroup.add(leftAnt);
+
+        const rightAnt = new THREE.Mesh(antGeo, new THREE.MeshStandardMaterial({ color: 0x22c55e }));
+        rightAnt.position.set(-0.42, -0.09, 0.25);
+        rightAnt.rotation.y = 0.35;
+        rightAnt.rotation.x = 0.2;
+        droneGroup.add(rightAnt);
+
+        // 4 Arms in X-Configuration (45 deg from X_b and Y_b axes) + Motors + Propellers
+        const armLength = 0.82;
+        const armAngles = [Math.PI / 4, -Math.PI / 4, (3 * Math.PI) / 4, -(3 * Math.PI) / 4];
+        const propellers = [];
+
+        armAngles.forEach((angle, idx) => {
+            const armPivot = new THREE.Group();
+            armPivot.rotation.z = angle;
+
+            // Carbon Arm Bar
+            const armMesh = new THREE.Mesh(new THREE.BoxGeometry(armLength, 0.09, 0.045), carbonMat);
+            armMesh.position.set(armLength / 2, 0, -0.06);
+            armPivot.add(armMesh);
+
+            // Red Racing Stripe on Arm
+            const stripeMesh = new THREE.Mesh(new THREE.BoxGeometry(armLength * 0.65, 0.094, 0.018), redAccentMat);
+            stripeMesh.position.set(armLength * 0.52, 0, -0.06);
+            armPivot.add(stripeMesh);
+
+            // Motor Base & Bronze Bell (Modeled as Cylinders per Section V)
+            const tipX = armLength;
+            const motorBell = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.11, 24).rotateX(Math.PI / 2), copperMotorMat);
+            motorBell.position.set(tipX, 0, 0.02);
+            armPivot.add(motorBell);
+
+            const motorCap = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.11, 0.03, 24).rotateX(Math.PI / 2), darkCarbonMat);
+            motorCap.position.set(tipX, 0, 0.08);
+            armPivot.add(motorCap);
+
+            const motorShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.08, 12).rotateX(Math.PI / 2), darkCarbonMat);
+            motorShaft.position.set(tipX, 0, 0.11);
+            armPivot.add(motorShaft);
+
+            // LED Indicator on Arm Tip (Green on Front-Right, Red on Front-Left/Rear)
+            const isGreen = (idx === 1);
+            const ledMat = new THREE.MeshBasicMaterial({ color: isGreen ? 0x4ade80 : 0xf87171 });
+            const ledMesh = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.07, 0.035), ledMat);
+            ledMesh.position.set(tipX + 0.06, 0, -0.06);
+            armPivot.add(ledMesh);
+
+            // Spinning Propeller Group
+            const propGroup = new THREE.Group();
+            propGroup.position.set(tipX, 0, 0.11);
+
+            const discMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.005, 32).rotateX(Math.PI / 2), propMat);
+            propGroup.add(discMesh);
+
+            const blade1 = new THREE.Mesh(new THREE.BoxGeometry(0.70, 0.055, 0.008), darkCarbonMat);
+            const blade2 = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.70, 0.008), darkCarbonMat);
+            propGroup.add(blade1, blade2);
+
+            armPivot.add(propGroup);
+            propellers.push({ group: propGroup, dir: idx % 2 === 0 ? 1 : -1 });
+
+            droneGroup.add(armPivot);
+        });
+
+        // Body Frame Coordinate Axes (Attached to Drone CG)
+        droneGroup.add(new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, 0), 1.15, 0x60a5fa, 0.14, 0.07));
+        droneGroup.add(new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 0), 1.15, 0xf87171, 0.14, 0.07));
+        droneGroup.add(new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, 0), 0.95, 0x34d399, 0.14, 0.07));
+
+        // 4. Interactive Camera Orbit Controls
+        let camAzimuth = -0.65;
+        let camElevation = 0.42;
+        let camRadius = 3.3;
+        let isDragging = false;
+        let prevMouse = { x: 0, y: 0 };
+
+        function updateCameraPosition() {
+            camera.position.x = camRadius * Math.cos(camElevation) * Math.cos(camAzimuth);
+            camera.position.y = camRadius * Math.cos(camElevation) * Math.sin(camAzimuth);
+            camera.position.z = camRadius * Math.sin(camElevation);
+            camera.lookAt(0, 0, 0.05);
+        }
+        updateCameraPosition();
+
+        container.addEventListener('pointerdown', (e) => {
+            isDragging = true;
+            prevMouse = { x: e.clientX, y: e.clientY };
+        });
+        window.addEventListener('pointerup', () => { isDragging = false; });
+        window.addEventListener('pointermove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - prevMouse.x;
+            const dy = e.clientY - prevMouse.y;
+            prevMouse = { x: e.clientX, y: e.clientY };
+            camAzimuth -= dx * 0.008;
+            camElevation = Math.max(-0.2, Math.min(1.35, camElevation + dy * 0.008));
+            updateCameraPosition();
+        });
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            camRadius = Math.max(1.8, Math.min(5.5, camRadius + e.deltaY * 0.002));
+            updateCameraPosition();
+        }, { passive: false });
+
+        // 5. Attitude State & Equations (1) and (18) from Physics Engine PDF
+        const deg2rad = Math.PI / 180;
+        const state = {
+            phi: 0, theta: 0, psi: 0,
+            targetPhi: 0, targetTheta: 0, targetPsi: 0
+        };
+
+        const rollInput = document.getElementById('roll-input');
+        const rollSlider = document.getElementById('roll-slider');
+        const pitchInput = document.getElementById('pitch-input');
+        const pitchSlider = document.getElementById('pitch-slider');
+        const yawInput = document.getElementById('yaw-input');
+        const yawSlider = document.getElementById('yaw-slider');
+        const matrixCells = document.getElementById('matrix-readout').children;
+        const ratePEl = document.getElementById('rate-p');
+        const rateQEl = document.getElementById('rate-q');
+        const rateREl = document.getElementById('rate-r');
+
+        function setTargets(rDeg, pDeg, yDeg) {
+            const r = Math.max(-85, Math.min(85, Number(rDeg) || 0));
+            const p = Math.max(-85, Math.min(85, Number(pDeg) || 0));
+            const y = Math.max(-180, Math.min(180, Number(yDeg) || 0));
+
+            rollInput.value = r; rollSlider.value = r;
+            pitchInput.value = p; pitchSlider.value = p;
+            yawInput.value = y; yawSlider.value = y;
+
+            state.targetPhi = r * deg2rad;
+            state.targetTheta = p * deg2rad;
+            state.targetPsi = y * deg2rad;
+        }
+
+        [rollInput, rollSlider].forEach(el => el.addEventListener('input', (e) => setTargets(e.target.value, pitchInput.value, yawInput.value)));
+        [pitchInput, pitchSlider].forEach(el => el.addEventListener('input', (e) => setTargets(rollInput.value, e.target.value, yawInput.value)));
+        [yawInput, yawSlider].forEach(el => el.addEventListener('input', (e) => setTargets(rollInput.value, pitchInput.value, e.target.value)));
+
+        document.getElementById('btn-reset-hover').addEventListener('click', () => setTargets(0, 0, 0));
+        document.getElementById('btn-preset-bank').addEventListener('click', () => setTargets(35, -20, 45));
+
+        let lastTime = performance.now();
+
+        function animate(now) {
+            requestAnimationFrame(animate);
+            const dt = Math.min((now - lastTime) / 1000, 0.05);
+            lastTime = now;
+
+            // Smooth first-order attitude response to compute Euler rates (phi_dot, theta_dot, psi_dot)
+            const responseGain = 4.5;
+            const phiDot = (state.targetPhi - state.phi) * responseGain;
+            const thetaDot = (state.targetTheta - state.theta) * responseGain;
+            const psiDot = (state.targetPsi - state.psi) * responseGain;
+
+            state.phi += phiDot * dt;
+            state.theta += thetaDot * dt;
+            state.psi += psiDot * dt;
+
+            const cPhi = Math.cos(state.phi), sPhi = Math.sin(state.phi);
+            const cTheta = Math.cos(state.theta), sTheta = Math.sin(state.theta);
+            const cPsi = Math.cos(state.psi), sPsi = Math.sin(state.psi);
+
+            // Equation (1): Z-Y-X Body-to-Inertial Transformation Matrix R_I^B
+            const R11 = cTheta * cPsi;
+            const R12 = cPsi * sTheta * sPhi - sPsi * cPhi;
+            const R13 = cPsi * sTheta * cPhi + sPsi * sPhi;
+
+            const R21 = sPsi * cTheta;
+            const R22 = sPsi * sTheta * sPhi + cPsi * cPhi;
+            const R23 = sPsi * sTheta * cPhi - cPsi * sPhi;
+
+            const R31 = -sTheta;
+            const R32 = cTheta * sPhi;
+            const R33 = cTheta * cPhi;
+
+            droneGroup.matrix.set(
+                R11, R12, R13, 0,
+                R21, R22, R23, 0,
+                R31, R32, R33, 0,
+                0,   0,   0,   1
+            );
+
+            // Equation (18): Body Angular Rates [p, q, r]^T from Euler Attitude Rates
+            const pRate = phiDot - sTheta * psiDot;
+            const qRate = cPhi * thetaDot + sPhi * cTheta * psiDot;
+            const rRate = -sPhi * thetaDot + cPhi * cTheta * psiDot;
+
+            // Update Live UI Telemetry
+            const vals = [R11, R12, R13, R21, R22, R23, R31, R32, R33];
+            for (let i = 0; i < 9; i++) {
+                matrixCells[i].textContent = vals[i].toFixed(3);
+            }
+            ratePEl.textContent = pRate.toFixed(2);
+            rateQEl.textContent = qRate.toFixed(2);
+            rateREl.textContent = rRate.toFixed(2);
+
+            // Spin propellers (modulated by p, q, r actuation moments per Eq. 21)
+            propellers.forEach((prop, i) => {
+                const baseOmega = 35;
+                prop.group.rotation.z += prop.dir * baseOmega * dt;
+            });
+
+            renderer.render(scene, camera);
+        }
+        requestAnimationFrame(animate);
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+    })();
+    </script>
 
     <!-- Presentations -->
     <section id="presentations" class="max-w-5xl mx-auto px-6 py-16">
