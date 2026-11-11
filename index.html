@@ -222,7 +222,7 @@
                         Reset to Hover (0&deg;, 0&deg;, 0&deg;)
                     </button>
                     <button id="btn-preset-bank" type="button" class="px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 rounded-md hover:bg-gray-200 transition-colors">
-                        Forward Bank (25&deg;, -18&deg;, 35&deg;)
+                        Pitch Down (0&deg;, -25&deg;, 0&deg;)
                     </button>
                 </div>
 
@@ -670,7 +670,7 @@
         [yawInput, yawSlider].forEach(el => el.addEventListener('input', (e) => setTargets(rollInput.value, pitchInput.value, e.target.value)));
 
         document.getElementById('btn-reset-hover').addEventListener('click', () => setTargets(0, 0, 0));
-        document.getElementById('btn-preset-bank').addEventListener('click', () => setTargets(25, -18, 35));
+        document.getElementById('btn-preset-bank').addEventListener('click', () => setTargets(0, -25, 0));
 
         let lastTime = performance.now();
 
@@ -692,7 +692,7 @@
             const cTheta = Math.cos(state.theta), sTheta = Math.sin(state.theta);
             const cPsi = Math.cos(state.psi), sPsi = Math.sin(state.psi);
 
-            // Equation (1): Z-Y-X Euler Transformation Matrix R_I^B
+            // Equation (1): Z-Y-X Euler Transformation Matrix R_I^B for telemetry readout
             const R11 = cTheta * cPsi;
             const R12 = cPsi * sTheta * sPhi - sPsi * cPhi;
             const R13 = cPsi * sTheta * cPhi + sPsi * sPhi;
@@ -705,11 +705,14 @@
             const R32 = cTheta * sPhi;
             const R33 = cTheta * cPhi;
 
+            // Apply to 3D mesh in Front-Left-Up coordinates so negative pitch (-theta) tilts nose (+X_b) down (-Z)
+            const tPitch = -state.theta;
+            const ct = Math.cos(tPitch), st = Math.sin(tPitch);
             droneGroup.matrix.set(
-                R11, R12, R13, 0,
-                R21, R22, R23, 0,
-                R31, R32, R33, 0,
-                0,   0,   0,   1
+                ct * cPsi, cPsi * st * sPhi - sPsi * cPhi, cPsi * st * cPhi + sPsi * sPhi, 0,
+                sPsi * ct, sPsi * st * sPhi + cPsi * cPhi, sPsi * st * cPhi - cPsi * sPhi, 0,
+                -st,       ct * sPhi,                      ct * cPhi,                      0,
+                0,         0,                              0,                              1
             );
 
             // Equation (18): Body Angular Rates [p, q, r]^T from Euler Attitude Rates
