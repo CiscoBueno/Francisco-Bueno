@@ -149,14 +149,14 @@
         </div>
     </section>
 
-    <!-- Interactive 3D Attitude Simulator Section -->
+    <!-- Interactive 3D Attitude Simulator Section (NED Inertial Frame & 3D Gateway Arch) -->
     <section id="simulator" class="max-w-5xl mx-auto px-6 py-16">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b pb-4 gap-2">
             <div>
-                <span class="text-xs font-bold tracking-widest text-[#2c5344] uppercase">Interactive Sandbox</span>
-                <h2 class="text-2xl font-bold mt-1">3D Quadcopter Attitude Visualizer</h2>
+                <span class="text-xs font-bold tracking-widest text-[#2c5344] uppercase">Interactive Kinematics Sandbox</span>
+                <h2 class="text-2xl font-bold mt-1">3D Quadcopter Attitude &amp; Frame Visualizer</h2>
             </div>
-            <p class="text-xs text-gray-500">Z-Y-X Euler Sequence (Eq. 1) &bull; Body Rates (Eq. 18)</p>
+            <p class="text-xs text-gray-500">Inertial NED Frame (R<sub>I</sub>) &bull; Body FLU Frame (R<sub>B</sub>) &bull; Eq. (1) &amp; Eq. (18)</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -222,15 +222,15 @@
                         Reset to Hover (0&deg;, 0&deg;, 0&deg;)
                     </button>
                     <button id="btn-preset-bank" type="button" class="px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 rounded-md hover:bg-gray-200 transition-colors">
-                        Aggressive Bank (35&deg;, -20&deg;, 45&deg;)
+                        Forward Bank (25&deg;, -18&deg;, 35&deg;)
                     </button>
                 </div>
 
                 <!-- Live Math Telemetry (Equations 1 & 18) -->
                 <div class="pt-4 border-t border-gray-100 space-y-3">
                     <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Rotation Matrix R<sub>I</sub><sup>B</sup> (Eq. 1)</span>
-                        <span class="text-[11px] font-mono text-gray-400">Body &rarr; Inertial</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Transformation Matrix R<sub>I</sub><sup>B</sup> (Eq. 1)</span>
+                        <span class="text-[11px] font-mono text-gray-400">Z-Y-X Sequence</span>
                     </div>
                     <div id="matrix-readout" class="grid grid-cols-3 gap-1.5 bg-gray-50 p-3 rounded-lg border border-gray-200 font-mono text-xs text-center text-gray-800">
                         <div>1.000</div><div>0.000</div><div>0.000</div>
@@ -239,7 +239,7 @@
                     </div>
 
                     <div class="flex justify-between items-center pt-1">
-                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Body Rates [p, q, r]<sup>T</sup> (Eq. 18)</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Body Angular Rates [p, q, r]<sup>T</sup> (Eq. 18)</span>
                         <span class="text-[11px] font-mono text-gray-400">rad/s</span>
                     </div>
                     <div class="grid grid-cols-3 gap-2 font-mono text-xs text-center">
@@ -256,18 +256,19 @@
                 </div>
             </div>
 
-            <!-- Right Column: 3D WebGL Viewport -->
+            <!-- Right Column: 3D WebGL Viewport with Procedural 3D St. Louis Arch & NED Frame -->
             <div class="lg:col-span-7 relative">
-                <div id="drone-canvas-container" class="w-full h-[460px] bg-slate-900 rounded-xl overflow-hidden shadow-md border border-slate-800 cursor-grab active:cursor-grabbing relative">
+                <div id="drone-canvas-container" class="w-full h-[480px] bg-slate-900 rounded-xl overflow-hidden shadow-md border border-slate-800 cursor-grab active:cursor-grabbing relative">
                     <!-- Overlay Legend -->
-                    <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-sm border border-slate-700/80 rounded-lg px-3 py-2 text-[11px] text-slate-200 space-y-1 pointer-events-none select-none">
-                        <div class="font-semibold text-white mb-1">Body Frame Axes (R<sub>B</sub>)</div>
-                        <div class="flex items-center gap-2"><span class="w-2.5 h-0.5 bg-blue-400 inline-block"></span> +X<sub>b</sub> : Nose / Roll Axis (&phi;)</div>
-                        <div class="flex items-center gap-2"><span class="w-2.5 h-0.5 bg-red-400 inline-block"></span> +Y<sub>b</sub> : Lateral / Pitch Axis (&theta;)</div>
-                        <div class="flex items-center gap-2"><span class="w-2.5 h-0.5 bg-emerald-400 inline-block"></span> +Z<sub>b</sub> : Vertical / Yaw Axis (&psi;)</div>
+                    <div class="absolute top-4 left-4 bg-slate-900/85 backdrop-blur-md border border-slate-700/80 rounded-lg px-3.5 py-2.5 text-[11px] text-slate-200 space-y-1.5 pointer-events-none select-none z-10">
+                        <div class="font-semibold text-white">Reference Frames</div>
+                        <div class="text-[10px] text-slate-400 pb-0.5">Inertial (R<sub>I</sub>): North-East-Down (NED) &bull; Body (R<sub>B</sub>): Front-Left-Up</div>
+                        <div class="flex items-center gap-2"><span class="w-2.5 h-0.5 bg-blue-400 inline-block"></span> +X<sub>I</sub> (North) / +X<sub>b</sub> (Front, Roll &phi;)</div>
+                        <div class="flex items-center gap-2"><span class="w-2.5 h-0.5 bg-red-400 inline-block"></span> +Y<sub>I</sub> (East) / +Y<sub>b</sub> (Left, Pitch &theta;)</div>
+                        <div class="flex items-center gap-2"><span class="w-2.5 h-0.5 bg-emerald-400 inline-block"></span> +Z<sub>I</sub> (Down) / +Z<sub>b</sub> (Up, Yaw &psi;)</div>
                     </div>
-                    <div class="absolute bottom-3 right-4 text-[11px] text-slate-400 pointer-events-none select-none">
-                        Drag to orbit camera &bull; Scroll to zoom
+                    <div class="absolute bottom-3 right-4 text-[11px] text-slate-300 bg-slate-900/60 px-2.5 py-1 rounded backdrop-blur-sm pointer-events-none select-none z-10">
+                        Drag to orbit 3D St. Louis scene &bull; Scroll to zoom
                     </div>
                 </div>
             </div>
@@ -275,18 +276,19 @@
         </div>
     </section>
 
-    <!-- Three.js Library & Self-Contained Attitude Simulator Script -->
+    <!-- Three.js Library & Procedural 3D Arch + NED Quadcopter Simulator -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
     (function() {
         const container = document.getElementById('drone-canvas-container');
         if (!container || typeof THREE === 'undefined') return;
 
-        // 1. Scene, Camera (Z-Up to match aeronautical frame), and Renderer
+        // 1. Scene Setup (Three.js World: +X = North, +Y = East/Left, +Z = Up for rendering; NED Inertial Frame explicitly drawn)
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x0f172a);
+        scene.background = new THREE.Color(0x0b132b);
+        scene.fog = new THREE.FogExp2(0x0b132b, 0.022);
 
-        const camera = new THREE.PerspectiveCamera(42, container.clientWidth / container.clientHeight, 0.1, 100);
+        const camera = new THREE.PerspectiveCamera(42, container.clientWidth / container.clientHeight, 0.1, 150);
         camera.up.set(0, 0, 1);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -294,35 +296,195 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+        // Lighting (Warm sunset directional light + cool sky fill to highlight the stainless steel Arch)
+        const ambientLight = new THREE.AmbientLight(0xcbd5e1, 0.75);
         scene.add(ambientLight);
 
-        const sunLight = new THREE.DirectionalLight(0xfff7ed, 1.1);
-        sunLight.position.set(5, -4, 6);
-        scene.add(sunLight);
+        const keyLight = new THREE.DirectionalLight(0xffedd5, 1.35);
+        keyLight.position.set(-8, -10, 12);
+        scene.add(keyLight);
 
-        const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.5);
-        rimLight.position.set(-5, 5, -3);
-        scene.add(rimLight);
+        const archSpotLight = new THREE.DirectionalLight(0x38bdf8, 0.85);
+        archSpotLight.position.set(10, 8, 6);
+        scene.add(archSpotLight);
 
-        // 2. Inertial Reference Frame Grid & Axes (R_I)
-        const gridHelper = new THREE.GridHelper(6, 12, 0x334155, 0x1e293b);
+        // Helper function to make clean 3D text sprites for axis labels
+        function createLabelSprite(text, colorHex) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.font = 'bold 28px Inter, monospace';
+            ctx.fillStyle = colorHex;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, 128, 32);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
+            const sprite = new THREE.Sprite(spriteMat);
+            sprite.scale.set(0.75, 0.19, 1);
+            return sprite;
+        }
+
+        // 2. Inertial Reference Frame (R_I) in North-East-Down (NED)
+        // Placed directly below the hovering quadcopter so +Z_I (Down) clearly points downward
+        const groundPlaneZ = -1.35;
+        const gridHelper = new THREE.GridHelper(16, 32, 0x334155, 0x1e293b);
         gridHelper.rotation.x = Math.PI / 2;
-        gridHelper.position.z = -0.9;
+        gridHelper.position.z = groundPlaneZ;
         scene.add(gridHelper);
 
-        const inertialOrigin = new THREE.Vector3(0, 0, -0.89);
-        scene.add(new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), inertialOrigin, 1.2, 0x3b82f6, 0.12, 0.06));
-        scene.add(new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), inertialOrigin, 1.2, 0xef4444, 0.12, 0.06));
-        scene.add(new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), inertialOrigin, 0.8, 0x10b981, 0.12, 0.06));
+        const nedOrigin = new THREE.Vector3(0, 0, -0.55);
+        // +X_I : North (Forward, Blue)
+        scene.add(new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), nedOrigin, 1.15, 0x3b82f6, 0.14, 0.07));
+        const northLabel = createLabelSprite('+X_I (North)', '#60a5fa');
+        northLabel.position.set(1.38, 0, -0.55);
+        scene.add(northLabel);
 
-        // 3. Procedural 3D FPV Quadcopter Group (Body Frame R_B: +X Front, +Y Left, +Z Up)
+        // +Y_I : East (Right, Red -> In right-handed NED where +X is North and +Z is Down, +Y East points to the right, i.e., -Y in world)
+        scene.add(new THREE.ArrowHelper(new THREE.Vector3(0, -1, 0), nedOrigin, 1.15, 0xef4444, 0.14, 0.07));
+        const eastLabel = createLabelSprite('+Y_I (East)', '#f87171');
+        eastLabel.position.set(0, -1.38, -0.55);
+        scene.add(eastLabel);
+
+        // +Z_I : Down (Pointing straight DOWN toward the ground grid, Emerald)
+        scene.add(new THREE.ArrowHelper(new THREE.Vector3(0, 0, -1), nedOrigin, 0.75, 0x10b981, 0.14, 0.07));
+        const downLabel = createLabelSprite('+Z_I (Down)', '#34d399');
+        downLabel.position.set(0, 0.22, -1.25);
+        scene.add(downLabel);
+
+        // Dashed vertical reference line connecting Inertial Origin to Drone CG
+        const lineGeo = new THREE.BufferGeometry().setFromPoints([nedOrigin, new THREE.Vector3(0, 0, 0)]);
+        const lineMat = new THREE.LineDashedMaterial({ color: 0x64748b, dashSize: 0.06, gapSize: 0.04 });
+        const refLine = new THREE.Line(lineGeo, lineMat);
+        refLine.computeLineDistances();
+        scene.add(refLine);
+
+        // 3. Procedural 3D St. Louis Gateway Arch & Riverfront Environment
+        const envGroup = new THREE.Group();
+        // Place the Arch monument in the background behind the drone
+        envGroup.position.set(7.5, 0, groundPlaneZ);
+        // Rotate so the Arch spans across the horizon facing the camera
+        envGroup.rotation.z = -0.35;
+        scene.add(envGroup);
+
+        // Mathematical Flattened Catenary Gateway Arch with tapering equilateral triangle cross-section
+        function buildGatewayArchMesh() {
+            const archWidth = 7.6;     // Span between outer legs
+            const archHeight = 7.6;    // Equal height and width (630 ft : 630 ft)
+            const cParam = 1.785;      // Flattened catenary constant
+            const coshC = Math.cosh(cParam);
+            const steps = 64;
+
+            const positions = [];
+            const rings = [];
+
+            for (let i = 0; i <= steps; i++) {
+                const s = -1 + (2 * i) / steps; // -1 (South leg) to +1 (North leg)
+                const y = s * (archWidth / 2);
+                const z = archHeight * (1 - (Math.cosh(cParam * s) - 1) / (coshC - 1));
+
+                // Derivative dz/dy for tangent vector
+                const dzds = -archHeight * (cParam * Math.sinh(cParam * s)) / (coshC - 1);
+                const dyds = archWidth / 2;
+                const tangent = new THREE.Vector3(0, dyds, dzds).normalize();
+
+                // Normal in the arch plane (YZ) and binormal along X (depth)
+                const binormal = new THREE.Vector3(1, 0, 0);
+                const normal = new THREE.Vector3().crossVectors(tangent, binormal).normalize();
+
+                // Taper triangular cross-section from base (s = +-1) to apex (s = 0)
+                const taper = 0.11 + 0.20 * Math.pow(Math.abs(s), 1.35);
+
+                // Equilateral triangle vertices around the centerline
+                const v0 = new THREE.Vector3(0, y, z)
+                    .addScaledVector(binormal, -taper * 0.85)
+                    .addScaledVector(normal, -taper * 0.5);
+                const v1 = new THREE.Vector3(0, y, z)
+                    .addScaledVector(binormal, taper * 0.85)
+                    .addScaledVector(normal, -taper * 0.5);
+                const v2 = new THREE.Vector3(0, y, z)
+                    .addScaledVector(normal, taper * 0.95);
+
+                rings.push([v0, v1, v2]);
+            }
+
+            // Build faceted triangular faces along the arch
+            function pushTriangle(a, b, c) {
+                positions.push(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z);
+            }
+            for (let i = 0; i < steps; i++) {
+                const rA = rings[i];
+                const rB = rings[i + 1];
+                for (let k = 0; k < 3; k++) {
+                    const kn = (k + 1) % 3;
+                    pushTriangle(rA[k], rB[k], rB[kn]);
+                    pushTriangle(rA[k], rB[kn], rA[kn]);
+                }
+            }
+
+            const archGeo = new THREE.BufferGeometry();
+            archGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            archGeo.computeVertexNormals();
+
+            const steelMat = new THREE.MeshStandardMaterial({
+                color: 0xe2e8f0,
+                metalness: 0.82,
+                roughness: 0.22,
+                side: THREE.DoubleSide
+            });
+            return new THREE.Mesh(archGeo, steelMat);
+        }
+
+        const gatewayArch = buildGatewayArchMesh();
+        envGroup.add(gatewayArch);
+
+        // Mississippi Riverfront Esplanade & Water Plane
+        const riverGeo = new THREE.PlaneGeometry(14, 28);
+        const riverMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.15, metalness: 0.7 });
+        const riverMesh = new THREE.Mesh(riverGeo, riverMat);
+        riverMesh.position.set(-4.5, 0, 0.01);
+        envGroup.add(riverMesh);
+
+        const leveeWall = new THREE.Mesh(
+            new THREE.BoxGeometry(0.6, 16, 0.22),
+            new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.8 })
+        );
+        leveeWall.position.set(-0.6, 0, 0.11);
+        envGroup.add(leveeWall);
+
+        // Low-Poly St. Louis Skyline Silhouette behind the Arch
+        const buildingMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7, metalness: 0.3 });
+        const skylineSpecs = [
+            [2.2, -3.2, 1.1, 1.1, 2.8],
+            [2.6, -1.6, 1.2, 1.4, 3.6],
+            [2.0,  0.0, 1.0, 1.0, 2.2], // Old Courthouse base aligned inside Arch
+            [2.8,  1.5, 1.3, 1.3, 4.1], // One Metropolitan Square tower
+            [2.3,  3.1, 1.1, 1.2, 3.0],
+            [3.2, -0.4, 1.2, 1.2, 3.3],
+            [3.4,  2.6, 1.0, 1.4, 2.5],
+            [3.1, -2.5, 1.0, 1.3, 2.4]
+        ];
+        skylineSpecs.forEach(([bx, by, bw, bd, bh]) => {
+            const bMesh = new THREE.Mesh(new THREE.BoxGeometry(bw, bd, bh), buildingMat);
+            bMesh.position.set(bx, by, bh / 2);
+            envGroup.add(bMesh);
+        });
+
+        // Old Courthouse Dome at center of Arch
+        const domeMesh = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.18, 0.32, 0.55, 16).rotateX(Math.PI / 2),
+            new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.5 })
+        );
+        domeMesh.position.set(2.0, 0.0, 2.47);
+        envGroup.add(domeMesh);
+
+        // 4. Procedural 3D FPV Quadcopter Group (Body Frame R_B: Front-Left-Up per PDF Section V)
         const droneGroup = new THREE.Group();
         droneGroup.matrixAutoUpdate = false;
         scene.add(droneGroup);
 
-        // Materials matching reference photo
         const carbonMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.45, metalness: 0.35 });
         const darkCarbonMat = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.35, metalness: 0.5 });
         const redAccentMat = new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.3, metalness: 0.4 });
@@ -330,7 +492,7 @@
         const batteryMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.5, metalness: 0.2 });
         const propMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, transparent: true, opacity: 0.45, side: THREE.DoubleSide });
 
-        // Bottom & Top Carbon Plates
+        // Frame Plates & Centralized Rectangular Battery (per Figure b in paper)
         const bottomPlate = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.42, 0.04), carbonMat);
         bottomPlate.position.set(0, 0, -0.08);
         droneGroup.add(bottomPlate);
@@ -339,12 +501,11 @@
         topPlate.position.set(-0.04, 0, 0.12);
         droneGroup.add(topPlate);
 
-        // Central Rectangular Battery Mass (per Figure b in paper)
         const batteryMesh = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.26, 0.15), batteryMat);
         batteryMesh.position.set(-0.04, 0, 0.01);
         droneGroup.add(batteryMesh);
 
-        // Red Anodized Standoffs (8 pillars connecting plates)
+        // Red Standoffs
         const standoffGeo = new THREE.CylinderGeometry(0.016, 0.016, 0.20, 12);
         standoffGeo.rotateX(Math.PI / 2);
         [[-0.42, 0.15], [-0.42, -0.15], [0.0, 0.15], [0.0, -0.15], [0.35, 0.14], [0.35, -0.14]].forEach(([sx, sy]) => {
@@ -364,7 +525,7 @@
         camLens.position.set(0.61, 0, 0.02);
         droneGroup.add(camLens);
 
-        // Top GPS Puck & Mast
+        // Top GPS Puck & Mast (+Z_b Up)
         const mastGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.26, 10);
         mastGeo.rotateX(Math.PI / 2);
         const gpsMast = new THREE.Mesh(mastGeo, darkCarbonMat);
@@ -382,7 +543,7 @@
         puckStripe.position.set(0.11, 0, 0.38);
         droneGroup.add(puckStripe);
 
-        // Rear VTX Antennas (Red/Orange Left, Green Right as in reference photo)
+        // Rear VTX Antennas
         const antGeo = new THREE.CylinderGeometry(0.01, 0.01, 0.30, 8);
         antGeo.rotateX(Math.PI / 2);
         const leftAnt = new THREE.Mesh(antGeo, new THREE.MeshStandardMaterial({ color: 0xf97316 }));
@@ -397,7 +558,7 @@
         rightAnt.rotation.x = 0.2;
         droneGroup.add(rightAnt);
 
-        // 4 Arms in X-Configuration (45 deg from X_b and Y_b axes) + Motors + Propellers
+        // 4 Arms in X-Configuration (45 deg from X_b and Y_b axes) + Cylindrical Motors + Propellers
         const armLength = 0.82;
         const armAngles = [Math.PI / 4, -Math.PI / 4, (3 * Math.PI) / 4, -(3 * Math.PI) / 4];
         const propellers = [];
@@ -406,17 +567,14 @@
             const armPivot = new THREE.Group();
             armPivot.rotation.z = angle;
 
-            // Carbon Arm Bar
             const armMesh = new THREE.Mesh(new THREE.BoxGeometry(armLength, 0.09, 0.045), carbonMat);
             armMesh.position.set(armLength / 2, 0, -0.06);
             armPivot.add(armMesh);
 
-            // Red Racing Stripe on Arm
             const stripeMesh = new THREE.Mesh(new THREE.BoxGeometry(armLength * 0.65, 0.094, 0.018), redAccentMat);
             stripeMesh.position.set(armLength * 0.52, 0, -0.06);
             armPivot.add(stripeMesh);
 
-            // Motor Base & Bronze Bell (Modeled as Cylinders per Section V)
             const tipX = armLength;
             const motorBell = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.11, 24).rotateX(Math.PI / 2), copperMotorMat);
             motorBell.position.set(tipX, 0, 0.02);
@@ -430,14 +588,12 @@
             motorShaft.position.set(tipX, 0, 0.11);
             armPivot.add(motorShaft);
 
-            // LED Indicator on Arm Tip (Green on Front-Right, Red on Front-Left/Rear)
             const isGreen = (idx === 1);
             const ledMat = new THREE.MeshBasicMaterial({ color: isGreen ? 0x4ade80 : 0xf87171 });
             const ledMesh = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.07, 0.035), ledMat);
             ledMesh.position.set(tipX + 0.06, 0, -0.06);
             armPivot.add(ledMesh);
 
-            // Spinning Propeller Group
             const propGroup = new THREE.Group();
             propGroup.position.set(tipX, 0, 0.11);
 
@@ -454,15 +610,15 @@
             droneGroup.add(armPivot);
         });
 
-        // Body Frame Coordinate Axes (Attached to Drone CG)
+        // Body Frame Coordinate Axes (R_B: +X_b Front, +Y_b Left, +Z_b Up)
         droneGroup.add(new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, 0), 1.15, 0x60a5fa, 0.14, 0.07));
         droneGroup.add(new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 0), 1.15, 0xf87171, 0.14, 0.07));
         droneGroup.add(new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, 0), 0.95, 0x34d399, 0.14, 0.07));
 
-        // 4. Interactive Camera Orbit Controls
-        let camAzimuth = -0.65;
-        let camElevation = 0.42;
-        let camRadius = 3.3;
+        // 5. Camera Orbit Controls (Framed so the Drone is in foreground and 3D Gateway Arch is behind it)
+        let camAzimuth = -2.75;
+        let camElevation = 0.18;
+        let camRadius = 3.5;
         let isDragging = false;
         let prevMouse = { x: 0, y: 0 };
 
@@ -470,7 +626,7 @@
             camera.position.x = camRadius * Math.cos(camElevation) * Math.cos(camAzimuth);
             camera.position.y = camRadius * Math.cos(camElevation) * Math.sin(camAzimuth);
             camera.position.z = camRadius * Math.sin(camElevation);
-            camera.lookAt(0, 0, 0.05);
+            camera.lookAt(0, 0, 0.15);
         }
         updateCameraPosition();
 
@@ -485,16 +641,16 @@
             const dy = e.clientY - prevMouse.y;
             prevMouse = { x: e.clientX, y: e.clientY };
             camAzimuth -= dx * 0.008;
-            camElevation = Math.max(-0.2, Math.min(1.35, camElevation + dy * 0.008));
+            camElevation = Math.max(-0.25, Math.min(1.35, camElevation + dy * 0.008));
             updateCameraPosition();
         });
         container.addEventListener('wheel', (e) => {
             e.preventDefault();
-            camRadius = Math.max(1.8, Math.min(5.5, camRadius + e.deltaY * 0.002));
+            camRadius = Math.max(1.8, Math.min(6.5, camRadius + e.deltaY * 0.002));
             updateCameraPosition();
         }, { passive: false });
 
-        // 5. Attitude State & Equations (1) and (18) from Physics Engine PDF
+        // 6. Attitude Kinematics: Equations (1) and (18) from Physics Engine PDF
         const deg2rad = Math.PI / 180;
         const state = {
             phi: 0, theta: 0, psi: 0,
@@ -531,7 +687,7 @@
         [yawInput, yawSlider].forEach(el => el.addEventListener('input', (e) => setTargets(rollInput.value, pitchInput.value, e.target.value)));
 
         document.getElementById('btn-reset-hover').addEventListener('click', () => setTargets(0, 0, 0));
-        document.getElementById('btn-preset-bank').addEventListener('click', () => setTargets(35, -20, 45));
+        document.getElementById('btn-preset-bank').addEventListener('click', () => setTargets(25, -18, 35));
 
         let lastTime = performance.now();
 
@@ -540,7 +696,7 @@
             const dt = Math.min((now - lastTime) / 1000, 0.05);
             lastTime = now;
 
-            // Smooth first-order attitude response to compute Euler rates (phi_dot, theta_dot, psi_dot)
+            // Smooth attitude response to compute Euler rates (phi_dot, theta_dot, psi_dot)
             const responseGain = 4.5;
             const phiDot = (state.targetPhi - state.phi) * responseGain;
             const thetaDot = (state.targetTheta - state.theta) * responseGain;
@@ -554,7 +710,7 @@
             const cTheta = Math.cos(state.theta), sTheta = Math.sin(state.theta);
             const cPsi = Math.cos(state.psi), sPsi = Math.sin(state.psi);
 
-            // Equation (1): Z-Y-X Body-to-Inertial Transformation Matrix R_I^B
+            // Equation (1): Z-Y-X Euler Transformation Matrix R_I^B
             const R11 = cTheta * cPsi;
             const R12 = cPsi * sTheta * sPhi - sPsi * cPhi;
             const R13 = cPsi * sTheta * cPhi + sPsi * sPhi;
@@ -588,8 +744,8 @@
             rateQEl.textContent = qRate.toFixed(2);
             rateREl.textContent = rRate.toFixed(2);
 
-            // Spin propellers (modulated by p, q, r actuation moments per Eq. 21)
-            propellers.forEach((prop, i) => {
+            // Spin propellers
+            propellers.forEach((prop) => {
                 const baseOmega = 35;
                 prop.group.rotation.z += prop.dir * baseOmega * dt;
             });
