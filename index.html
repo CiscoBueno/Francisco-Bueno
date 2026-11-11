@@ -153,7 +153,7 @@
     <section id="simulator" class="max-w-5xl mx-auto px-6 py-16">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b pb-4 gap-2">
             <div>
-                <span class="text-xs font-bold tracking-widest text-[#2c5344] uppercase">Interactive Sandbox</span>
+                <span class="text-xs font-bold tracking-widest text-[#2c5344] uppercase">Interactive Kinematics Sandbox</span>
                 <h2 class="text-2xl font-bold mt-1">3D Quadcopter Attitude &amp; Frame Visualizer</h2>
             </div>
             <p class="text-xs text-gray-500">Inertial NED Frame (R<sub>I</sub>) &bull; Body FLU Frame (R<sub>B</sub>) &bull; Eq. (1) &amp; Eq. (18)</p>
@@ -309,7 +309,7 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        // Bright Daylight Lighting (Hemisphere sky/ground light + bright sun directional lights)
+        // Bright Daylight Lighting
         const hemiLight = new THREE.HemisphereLight(0xffffff, 0xcbd5e1, 1.15);
         hemiLight.position.set(0, 0, 10);
         scene.add(hemiLight);
@@ -342,6 +342,8 @@
         }
 
         // 2. Inertial Reference Frame (R_I) in North-East-Down (NED)
+        // Rotated 90 degrees counterclockwise around the vertical axis:
+        // North (+X_I) -> (0, 1, 0), East (+Y_I) -> (1, 0, 0), Down (+Z_I) -> (0, 0, -1)
         const groundPlaneZ = -1.35;
         const gridHelper = new THREE.GridHelper(12, 24, 0x94a3b8, 0xcbd5e1);
         gridHelper.rotation.x = Math.PI / 2;
@@ -349,16 +351,17 @@
         scene.add(gridHelper);
 
         const nedOrigin = new THREE.Vector3(0, 0, -0.55);
-        // +X_I : North (Forward, Blue)
-        scene.add(new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), nedOrigin, 1.1, 0x2563eb, 0.13, 0.065));
+
+        // +X_I : North (Rotated 90 deg CCW to +Y world axis, Blue)
+        scene.add(new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), nedOrigin, 1.1, 0x2563eb, 0.13, 0.065));
         const northLabel = createLabelSprite('+X_I (North)', '#1d4ed8');
-        northLabel.position.set(1.35, 0, -0.55);
+        northLabel.position.set(0, 1.38, -0.55);
         scene.add(northLabel);
 
-        // +Y_I : East (Right, Red)
-        scene.add(new THREE.ArrowHelper(new THREE.Vector3(0, -1, 0), nedOrigin, 1.1, 0xdc2626, 0.13, 0.065));
+        // +Y_I : East (Rotated 90 deg CCW to +X world axis, Red)
+        scene.add(new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), nedOrigin, 1.1, 0xdc2626, 0.13, 0.065));
         const eastLabel = createLabelSprite('+Y_I (East)', '#b91c1c');
-        eastLabel.position.set(0, -1.35, -0.55);
+        eastLabel.position.set(1.38, 0, -0.55);
         scene.add(eastLabel);
 
         // +Z_I : Down (Pointing straight DOWN toward the ground grid, Emerald)
@@ -374,17 +377,15 @@
         refLine.computeLineDistances();
         scene.add(refLine);
 
-        // 3. Procedural 3D St. Louis Gateway Arch Directly Over the Drone (No Buildings or Waterfront)
+        // 3. Procedural 3D St. Louis Gateway Arch Directly Over the Drone
         const archGroup = new THREE.Group();
-        // Centered at X = 0, Y = 0 so the Arch spans East-to-West directly OVER the drone at (0, 0, 0)
-        // Meanwhile, the drone faces +X (North), flying cleanly underneath the Arch opening
         archGroup.position.set(0, 0, groundPlaneZ);
         scene.add(archGroup);
 
         function buildGatewayArchMesh() {
-            const archWidth = 4.5;     // Span across Y axis so legs flank the drone cleanly
-            const archHeight = 3.65;   // Height above groundPlaneZ (-1.35 -> apex at +2.30 above drone)
-            const cParam = 1.785;      // Flattened catenary constant
+            const archWidth = 4.5;
+            const archHeight = 3.65;
+            const cParam = 1.785;
             const coshC = Math.cosh(cParam);
             const steps = 72;
 
@@ -403,7 +404,6 @@
                 const binormal = new THREE.Vector3(1, 0, 0);
                 const normal = new THREE.Vector3().crossVectors(tangent, binormal).normalize();
 
-                // Tapering equilateral triangle cross-section from base legs to apex
                 const taper = 0.08 + 0.14 * Math.pow(Math.abs(s), 1.35);
 
                 const v0 = new THREE.Vector3(0, y, z)
@@ -582,7 +582,7 @@
         droneGroup.add(new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 0), 1.15, 0xef4444, 0.14, 0.07));
         droneGroup.add(new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, 0), 0.95, 0x10b981, 0.14, 0.07));
 
-        // 5. Camera Orbit Controls (Looking from front-quarter so the drone faces out toward the viewer with the Arch spanning overhead)
+        // 5. Camera Orbit Controls
         let camAzimuth = -0.52;
         let camElevation = 0.20;
         let camRadius = 5.0;
